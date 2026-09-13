@@ -745,7 +745,8 @@ abstract class dof_storage implements dof_plugin_storage
         }
         if ( is_scalar($value) AND ! is_bool($value) )
         {//значение только одно';
-            return "{$field} = '{$value}'";
+            $escaped = addslashes($value);
+            return "{$field} = '{$escaped}'";
         }
         if ( is_array($value) AND ! empty($value) )
         {//значений несколько';
@@ -760,7 +761,7 @@ abstract class dof_storage implements dof_plugin_storage
                     unset ($value[$k]);
                 }elseif( is_scalar($v) )
                 {//передано что надо - превращаем в строку
-                    $value[$k] = '\''.$v.'\'';
+                    $value[$k] = '\''.addslashes($v).'\'';
                 }else
                 {//передано то, что не надо было передавать
                     return false;
