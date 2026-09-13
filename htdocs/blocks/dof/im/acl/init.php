@@ -641,7 +641,6 @@ class dof_im_acl implements dof_plugin_im
         }
         foreach ( $subwarrants as $subwarrant )
         {
-            // TODO добавить ссылки на редактирование и удаление субдоверенности
             $action = '';
             if ( $this->is_access('aclwarrants:delegate',$subwarrant->id) )
             {
@@ -662,10 +661,11 @@ class dof_im_acl implements dof_plugin_im
 
             }
 
+            // Надпись делается ссылкой на просмотр прав доверенности
+            $link = $this->dof->url_im('acl','/warrantview.php?aclwarrantid='.$subwarrant->id.'&departmentid='.$depid);
+            $result .= $spaces.'<a href="'.$link.'">'.$subwarrant->name.'['.$subwarrant->code.']</a> '.$action.'<br>';
+            $result .= $this->show_list_warrants($subwarrant->id, $personid, $depid, $spaces.'&nbsp;&nbsp;&nbsp;&nbsp;');
         }
-        // Надпись делается ссылкой на просмотр прав доверенности
-        $link = $this->dof->url_im('acl','/warrantview.php?aclwarrantid='.$subwarrant->id.'&departmentid='.$depid);
-        $result .= $spaces.'<a href="'.$link.'">'.$subwarrant->name.'['.$subwarrant->code.']</a> '.$action.'<br>';
         return $result;
     }
     
