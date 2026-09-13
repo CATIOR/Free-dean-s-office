@@ -695,8 +695,7 @@ class dof_storage_orders extends dof_storage
         
         if ( ! file_exists($filepath) )
         {// нет файла с указанным названием
-            // @todo записать ошибку в лог
-            echo $filepath;
+            $this->dof->add_to_log($plugintype, $plugincode, 'file_not_exists', '', "File {$filepath} does not exist");
             return false;
         }
         
@@ -706,7 +705,7 @@ class dof_storage_orders extends dof_storage
         
         if ( ! class_exists($classname) )
         {// в файле нет нужного класса
-            // @todo записать ошибку в лог
+            $this->dof->add_to_log($plugintype, $plugincode, 'class_not_exists', '', "Class {$classname} does not exist in {$filepath}");
 
             return false;
         }
