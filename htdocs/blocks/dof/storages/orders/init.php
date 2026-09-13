@@ -695,8 +695,13 @@ class dof_storage_orders extends dof_storage
         
         if ( ! file_exists($filepath) )
         {// нет файла с указанным названием
-            // @todo записать ошибку в лог
-            echo $filepath;
+            $this->dof->add_to_log(
+                $plugintype,
+                $plugincode,
+                'order:file_not_found',
+                '',
+                'Order file ' . $filepath . ' not found'
+            );
             return false;
         }
         
@@ -706,8 +711,13 @@ class dof_storage_orders extends dof_storage
         
         if ( ! class_exists($classname) )
         {// в файле нет нужного класса
-            // @todo записать ошибку в лог
-
+            $this->dof->add_to_log(
+                $plugintype,
+                $plugincode,
+                'order:class_not_found',
+                '',
+                'Order class ' . $classname . ' not found'
+            );
             return false;
         }
         // создаем объект для сбора данных
