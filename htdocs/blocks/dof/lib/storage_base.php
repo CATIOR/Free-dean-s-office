@@ -390,7 +390,7 @@ abstract class dof_storage implements dof_plugin_storage
     {
         global $DB;
         
-    return $DB->count_records_sql($sql, $params);
+        return $DB->count_records_sql($sql, $params);
     }
     
     /** Проверяет наличие записи в таблице
