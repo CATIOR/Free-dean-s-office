@@ -93,7 +93,6 @@ final class dof_im_learningorders_orders_table
             }
         }else
         {// не подписан - продолжить работу, сформировать заново, подписать
-            // TODO сделать ссылку для готово
             $actions .= '
             <a href="'.$this->dof->url_im('learningorders', '/ordertransfer/ageschoice.php?id='.$order->id,$this->addvars)
             .'" title="'. $this->dof->get_string('order_new','learningorders')
@@ -109,7 +108,10 @@ final class dof_im_learningorders_orders_table
                 .'"> <img src="'.$this->dof->url_im('learningorders', '/icons/edit.png').'"> </a>
                 <a href="'.$this->dof->url_im('learningorders', '/ordertransfer/subtransfer.php?orderid='.$order->id,$this->addvars)
                 .'" title="'. $this->dof->get_string('order_write','learningorders')
-                .'"> <img src="'.$this->dof->url_im('learningorders', '/icons/write.png').'">  </a>';
+                .'"> <img src="'.$this->dof->url_im('learningorders', '/icons/write.png').'">  </a>
+                <a href="'.$this->dof->url_im('learningorders', '/ordertransfer/readytransfer.php?orderid='.$order->id,$this->addvars)
+                .'" title="'. $this->dof->get_string('order_ready','learningorders')
+                .'"> <img src="'.$this->dof->url_im('learningorders', '/icons/ready.png').'"></a>';
             }
         }
         
