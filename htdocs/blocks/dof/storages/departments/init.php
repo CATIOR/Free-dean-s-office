@@ -375,7 +375,7 @@ class dof_storage_departments extends dof_storage implements dof_storage_config_
     public function acldefault()
     {
         $a = array();
-        // TODO определить datamanager
+        $a['datamanager'] = array('roles' => array('manager'));
         $a['view']   = array('roles'=>array('manager','methodist'));
         $a['edit']   = array('roles'=>array('manager'));
         $a['use']    = array('roles'=>array('manager','methodist'));
