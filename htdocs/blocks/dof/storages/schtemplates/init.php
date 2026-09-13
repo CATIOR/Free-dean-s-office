@@ -146,23 +146,6 @@ class dof_storage_schtemplates extends dof_storage implements dof_storage_config
 									  'config'      => 2011040500,
 		                              'acl'         => 2011041800));
     }
-    /** Определить, возможна ли установка плагина в текущий момент
-     * Эта функция одинакова абсолютно для всех плагинов и не содержит в себе каких-либо зависимостей
-     * @TODO УДАЛИТЬ эту функцию при рефакторинге. Вместо нее использовать наследование
-     * от класса dof_modlib_base_plugin 
-     * @see dof_modlib_base_plugin::is_setup_possible()
-     * 
-     * @param int $oldversion[optional] - старая версия плагина в базе (если плагин обновляется)
-     *                                    или 0 если плагин устанавливается
-     * 
-     * @return bool 
-     *              true - если плагин можно устанавливать
-     *              false - если плагин устанавливать нельзя
-     */
-    public function is_setup_possible($oldversion=0)
-    {
-        return dof_is_plugin_setup_possible($this, $oldversion);
-    }
     /** Получить список плагинов, которые уже должны быть установлены в системе,
      * и без которых начать установку или обновление невозможно
      * 
