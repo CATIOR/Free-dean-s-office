@@ -708,7 +708,7 @@ class dof_control
         $filteredvars = array();
         foreach ( $vars as $key => $value )
         {
-            if ( is_scalar($value) )
+            if ( ! is_array($value) )
             {
                 $filteredvars[$key] = $value;
             }
