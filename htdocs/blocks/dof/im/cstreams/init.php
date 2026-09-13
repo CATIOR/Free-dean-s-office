@@ -1187,7 +1187,7 @@ class dof_im_cstreams implements dof_plugin_im
         $programmid = $this->dof->storage('programmitems')->get_field($cstream->programmitemid, 'programmid');
         if ( ! $programmid )
         {// программа не найдена  - это ошибка
-            // @todo записать ошибку в лог, когда это станет возможно
+            $this->dof->add_to_log('im', 'cstreams', 'error_programm_not_found', '', 'programm for cstream with id '.$cstream->id.' not found');
             return array();
         }
         $agenum = $this->dof->storage('programmitems')->get_field($cstream->programmitemid, 'agenum');
