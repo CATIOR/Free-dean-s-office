@@ -277,8 +277,12 @@ class MoodleQuickForm_dof_date_selector extends MoodleQuickForm_group {
                     $result = 0;
                     $name = $this->getName();
                     $value = [];
-                    $myIndex  = "['" . str_replace(array(']', '['), array('', "']['"), $name) . "']";
-                    eval("\$value$myIndex = \$result;");
+                    $keys = preg_split('/[\[\]]+/', $name, -1, PREG_SPLIT_NO_EMPTY);
+                    $ref = &$value;
+                    foreach ($keys as $key) {
+                        $ref = &$ref[$key];
+                    }
+                    $ref = $result;
                     return $value;
                 }
             }
@@ -339,8 +343,12 @@ class MoodleQuickForm_dof_date_selector extends MoodleQuickForm_group {
             // Добавляем данные
             $name = $this->getName();
             $value = [];
-            $myIndex  = "['" . str_replace(array(']', '['), array('', "']['"), $name) . "']";
-            eval("\$value$myIndex = \$result;");
+            $keys = preg_split('/[\[\]]+/', $name, -1, PREG_SPLIT_NO_EMPTY);
+            $ref = &$value;
+            foreach ($keys as $key) {
+                $ref = &$ref[$key];
+            }
+            $ref = $result;
             return $value;
         } else {
             return null;
