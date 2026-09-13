@@ -748,10 +748,9 @@ class dof_control
             // извлекаем строки сами
             $path = $this->plugin_path($plugintype, $pluginname, "/lang/");
             
-            if ( $result = $this->get_string_from_file($identifier, $path.'ru/'.$langfile.'.php', "\$resultstring") )
+            if ( ($rawstring = $this->get_string_from_file($identifier, $path.'ru/'.$langfile.'.php')) !== false )
             {
-                eval($result);
-                return $resultstring;
+                return dof_parse_langstring($rawstring, $a);
             }else
             {
                 return '[['.$identifier.']]';
@@ -767,23 +766,22 @@ class dof_control
      * This function is only used from {@link get_string()}.
      *
      * @internal Only used from get_string, not meant to be public API
-     * @param string $identifier ?
-     * @param string $langfile ?
-     * @param string $destination ?
-     * @return string|false ?
-     * @staticvar array $strings Localized strings
+     * @param string $identifier
+     * @param string $langfile
+     * @param string $destination [deprecated/unused]
+     * @return string|false
      * @access private
-     * @todo Finish documenting this function.
      */
-    protected function get_string_from_file($identifier, $langfile, $destination)
+    protected function get_string_from_file($identifier, $langfile, $destination = null)
     {
+        $string = array();
         @include($langfile);
         if ( ! isset($string[$identifier]))
         {
             return false;
         }
     
-        return $destination .'= sprintf("'. $string[$identifier] .'");';
+        return $string[$identifier];
     }
     
     /** Проверяет полномочия на совершение действий
