@@ -708,8 +708,7 @@ class dof_storage_reports extends dof_storage implements dof_storage_config_inte
         
         if ( ! file_exists($filepath) )
         {// нет файла с указанным названием
-            // @todo записать ошибку в лог
-            echo $filepath;
+            $this->dof->add_to_log($plugintype, $plugincode, 'report_file_not_found', '', $filepath);
             return false;
         }
         // подключаем файл с классом сбора данных для отчета
@@ -717,8 +716,7 @@ class dof_storage_reports extends dof_storage implements dof_storage_config_inte
                                  
         if ( ! class_exists($classname) )
         {// в файле нет нужного класса
-            // @todo записать ошибку в лог
-            
+            $this->dof->add_to_log($plugintype, $plugincode, 'report_class_not_found', '', $classname);
             return false;
         }
         // создаем объект для сбора данных
