@@ -813,17 +813,14 @@ class dof_im_programmsbcs_search_form extends dof_modlib_widgets_form
         $pitems = $this->get_list_programms();
         $mform->addElement('select', 'programmid', $this->dof->get_string('programm','programmsbcs').':', $pitems);
         $mform->setType('programmid', PARAM_INT);
-        // поле "ученик"
-        
-        /* TODO расскоментировать, когда будет работать фо AJAX форме
+        // поле "группа"
         $agroups = $this->get_list_agroups();
         $mform->addElement('select', 'agroupid', $this->dof->get_string('agroup','programmsbcs').':', $agroups);
         $mform->setType('agroupid', PARAM_INT);
         // поле "ученик"
         $students = $this->get_list_contracts();
         $mform->addElement('select', 'contractid', $this->dof->get_string('contract','programmsbcs').':', $students);
-        $mform->setType('studentid', PARAM_INT);
-        */
+        $mform->setType('contractid', PARAM_INT);
         
         // поле "статус"
         $statuses = $this->get_list_statuses();
@@ -912,10 +909,9 @@ class dof_im_programmsbcs_search_form extends dof_modlib_widgets_form
      */
     private function get_list_agroups()
     {
-        $result = array();
-        // получаем все программы
-        $agroups = $this->dof->storage('agroups')->get_records(array('programmid'=>$programmid));
-        $this->dof_get_select_values($agroups);
+        // извлекаем все академические группы из базы
+        $agroups = $this->dof->storage('agroups')->get_records(array(), 'name');
+        $result = $this->dof_get_select_values($agroups, true, 'id', array('name', 'code'));
         // оставим в списке только те объекты, на использование которых есть право
         $permissions = array(array('plugintype'=>'storage', 'plugincode'=>'agroups', 'code'=>'use'));
         $result = $this->dof_get_acl_filtered_list($result, $permissions);
