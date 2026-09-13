@@ -785,7 +785,7 @@ class dof_im_schedule_create_event_form extends dof_modlib_widgets_form
         
         // делаем с помошью HTML для ВИЗУАЛА
         // TODO в будущем это вынести в стили
-        $table_html = '<table align="left" width=80%><tr><td>';
+        $table_html = '<table class="dof_schedule_create_table"><tr><td>';
         $mform->addElement('html', $table_html);
         $mform->addElement('submit', 'button1', $this->dof->get_string("create_week",$this->im_code()));
         $mform->addElement('html', '</td><td>');        
