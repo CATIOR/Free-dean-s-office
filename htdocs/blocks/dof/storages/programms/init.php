@@ -327,8 +327,11 @@ class dof_storage_programms extends dof_storage implements dof_storage_config_in
         $newobj->code = 'id'.$id;
         
         // добавляем код к созданной записи и возвращаем результат
-        // @todo проверить результат вставки и записать ошибку в лог если это не удалось
-        $this->update($newobj);
+        if ( ! $this->update($newobj) )
+        {
+            dof_debugging('Unable to update program code', DEBUG_DEVELOPER);
+            return false;
+        }
         return $id;
     }
 
