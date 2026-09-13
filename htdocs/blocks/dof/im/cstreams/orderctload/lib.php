@@ -1125,7 +1125,6 @@ final class dof_im_cstreams_orders_table
             }
         }else
         {// не подписан - удалить, продолжить работу, подписать
-            // TODO сделать ссылку для готово
             $actions .= '
             <a href="'.$this->dof->url_im('cstreams', '/orderctload/delete.php?id='.$order->id,$this->addvars)
             .'" title="'. $this->dof->get_string('order_delete','cstreams')
@@ -1141,7 +1140,10 @@ final class dof_im_cstreams_orders_table
                 .'"> <img src="'.$this->dof->url_im('cstreams', '/icons/edit.png').'"> </a>
                 <a href="'.$this->dof->url_im('cstreams', '/orderctload/sign.php?id='.$order->id,$this->addvars)
                 .'" title="'. $this->dof->get_string('order_write','cstreams')
-                .'"> <img src="'.$this->dof->url_im('cstreams', '/icons/write.png').'">  </a>';
+                .'"> <img src="'.$this->dof->url_im('cstreams', '/icons/write.png').'">  </a>
+                <a href="'.$this->dof->url_im('cstreams', '/orderctload/sign_execute.php?id='.$order->id,$this->addvars)
+                .'" title="'. $this->dof->get_string('order_writeready','cstreams')
+                .'"> <img src="'.$this->dof->url_im('cstreams', '/icons/ready.png').'"> </a>';
             }
         }
         
