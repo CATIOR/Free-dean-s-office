@@ -907,14 +907,6 @@ class dof_control
 
         $this->debugging('Stack trace:', DEBUG_DEVELOPER);
 
-        // in case we are logging upgrade in admin/index.php stop it
-        // TODO нет такого методо в 2,0 - удалить со временем!!!
-        /*
-        if (function_exists('upgrade_log_finish'))
-        {
-            upgrade_log_finish();
-        }
-        */
         if ( ! empty($link) )
         {
             echo $OUTPUT->continue_button($link);
