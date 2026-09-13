@@ -104,41 +104,25 @@ if ( $form->is_cancelled() )
     //print_object($formdata);
     // заносим данные в БД
     
-    // TODO вынести эти проверки в validation() в форме
     if (isset($formdata->programmsbcid) AND $formdata->programmsbcid )
     {// подписка на курс редактировалась - обновим запись в БД';
-        if ( $DOF->storage('programmsbcs')->is_programmsbc($programmsbcs->contractid,$programmid,
-                            $programmsbcs->agroupid, null, $formdata->programmsbcid) )
-        {// если такая подписка уже существует - обновлять нельзя
-            $error .= '<br>'.$DOF->get_string('programmsbc_exists','programmsbcs').'<br>';
+        if ( $DOF->storage('programmsbcs')->update($programmsbcs, $formdata->programmsbcid) )
+        {// редактирование прошло успешно
+            redirect($DOF->url_im('programmsbcs','/view.php?programmsbcid='.$formdata->programmsbcid,$addvars));
         }else
-        {// такой подписки еще нет - можем обновлять
-            if ( $DOF->storage('programmsbcs')->update($programmsbcs, $formdata->programmsbcid) )
-            {// редактирование прошло успешно
-                redirect($DOF->url_im('programmsbcs','/view.php?programmsbcid='.$formdata->programmsbcid,$addvars));
-            }else
-            {// не удалось произвести редактирование - выводим ошибку
-                $error .= '<br>'.$DOF->get_string('errorsaveprogrammsbcs','programmsbcs').'<br>';
-            }
+        {// не удалось произвести редактирование - выводим ошибку
+            $error .= '<br>'.$DOF->get_string('errorsaveprogrammsbcs','programmsbcs').'<br>';
         }
     }else
     {// подписка на курс создавалась
-        if ( $id = $DOF->storage('programmsbcs')->is_programmsbc($programmsbcs->contractid,$programmid) )
-        {// если такая подписка уже существует - сохранять нельзя
-            $error .= '<br>'.$DOF->get_string('programmsbc_exists','programmsbcs').'<br>';
-            $error .= '<a href='.$DOF->url_im('programmsbcs','/edit.php?programmsbcid='.$id,$addvars).
-                      '>'.$DOF->get_string('go_edit_programmsbc','programmsbcs').'</a><br>';
+        // сохраняем запись в БД
+        if( $id = $DOF->storage('programmsbcs')->sign($programmsbcs) )
+        {// все в порядке - сохраняем статус и возвращаем на страниу просмотра подписки
+            $DOF->workflow('programmsbcs')->init($id);
+            redirect($DOF->url_im('programmsbcs','/view.php?programmsbcid='.$id,$addvars));
         }else
-        {// такой подписки еще нет - можем сохранять        
-            // сохраняем запись в БД
-            if( $id = $DOF->storage('programmsbcs')->sign($programmsbcs) )
-            {// все в порядке - сохраняем статус и возвращаем на страниу просмотра подписки
-                $DOF->workflow('programmsbcs')->init($id);
-                redirect($DOF->url_im('programmsbcs','/view.php?programmsbcid='.$id,$addvars));
-            }else
-            {// подписка на курс выбрана неверно - сообщаем об ошибке
-                $error .=  '<br>'.$DOF->get_string('errorsaveprogrammsbcs','programmsbcs').'<br>';
-            }
+        {// подписка на курс выбрана неверно - сообщаем об ошибке
+            $error .=  '<br>'.$DOF->get_string('errorsaveprogrammsbcs','programmsbcs').'<br>';
         }
     }
 }

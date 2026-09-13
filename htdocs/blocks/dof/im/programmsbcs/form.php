@@ -292,7 +292,7 @@ class dof_im_programmsbcs_edit_form extends dof_modlib_widgets_form
             // проверим существование группы
             if ( isset($data['agroup'][1]) AND $data['agroup'][1] )
             {// проверяем существование группы
-                if ( ! $agroup = $this->dof->storage('agroups')->get($data['prog_and_agroup'][1]) )
+                if ( ! $agroup = $this->dof->storage('agroups')->get($data['agroup'][1]) )
                 {// если она указана, но ее id не найден - то это ошибка
                     $errors['agroup'] = $this->dof->get_string('err_required_multi','programmsbcs');
                 }elseif ( $agroup->programmid <> $data['programmid'] )
@@ -309,6 +309,19 @@ class dof_im_programmsbcs_edit_form extends dof_modlib_widgets_form
             {
                 $errors['departmentid'] = $this->dof->get_string('limit_message','programmsbcs');
             } 
+
+            // проверка существования подписки
+            $contractid = isset($data['contractid']) ? $data['contractid'] : $this->dof->storage('programmsbcs')->get_field($data['programmsbcid'], 'contractid');
+            $programmid = isset($data['programmid']) ? $data['programmid'] : $this->dof->storage('programmsbcs')->get_field($data['programmsbcid'], 'programmid');
+            $agroupid   = (isset($data['agroup'][1]) AND $data['agroup'][1]) ? $data['agroup'][1] : null;
+
+            if ( $contractid AND $programmid )
+            {
+                if ( $this->dof->storage('programmsbcs')->is_programmsbc($contractid, $programmid, $agroupid, null, $data['programmsbcid']) )
+                {
+                    $errors['agroup'] = $this->dof->get_string('programmsbc_exists', 'programmsbcs');
+                }
+            }
         }else
         {// если создается новая подписка
             // проверим существование контракта
@@ -328,7 +341,7 @@ class dof_im_programmsbcs_edit_form extends dof_modlib_widgets_form
                  ! $this->dof->storage('programms')->is_exists($data['prog_and_agroup'][0]) )
             {// такая программа не существует
                 $errors['prog_and_agroup'] = $this->dof->get_string('err_required_multi','programmsbcs');
-            }elseif ( ! isset($data['prog_and_agroup'][2]) AND $data['prog_and_agroup'][2] )
+            }elseif ( isset($data['prog_and_agroup'][2]) AND $data['prog_and_agroup'][2] )
             {// проверяем существование группы
                 if ( ! $agroup = $this->dof->storage('agroups')->get($data['prog_and_agroup'][2]) )
                 {// если она указана, но ее id не найден - то это ошибка
@@ -346,6 +359,23 @@ class dof_im_programmsbcs_edit_form extends dof_modlib_widgets_form
             {
                 $errors['departmentid'] = $this->dof->get_string('limit_message','programmsbcs');
             } 
+
+            // проверка существования подписки
+            if ( empty($errors['contractid']) AND empty($errors['prog_and_agroup']) )
+            {
+                $contractid = isset($data['contractid']) ? $data['contractid'] : 0;
+                $programmid = isset($data['prog_and_agroup'][0]) ? $data['prog_and_agroup'][0] : 0;
+                $agroupid   = (isset($data['prog_and_agroup'][2]) AND $data['prog_and_agroup'][2]) ? $data['prog_and_agroup'][2] : null;
+                $excludeid  = !empty($data['programmsbcid']) ? $data['programmsbcid'] : null;
+
+                if ( $contractid AND $programmid )
+                {
+                    if ( $this->dof->storage('programmsbcs')->is_programmsbc($contractid, $programmid, $agroupid, null, $excludeid) )
+                    {
+                        $errors['prog_and_agroup'] = $this->dof->get_string('programmsbc_exists', 'programmsbcs');
+                    }
+                }
+            }
         }    
         // если ошибки есть - то пользователь вернется на страницу редактирования и увидит их
         return $errors;
