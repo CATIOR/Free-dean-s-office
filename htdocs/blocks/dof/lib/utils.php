@@ -34,6 +34,50 @@ function dof_checkcode($str)
 {
     return mb_strlen($str) > 0 AND mb_strlen($str) <= 20 AND preg_match("/^[a-z]+$/",$str);
 }
+/** Безопасно подставляет значения из $a в языковую строку без использования eval()
+ * @param string $str - исходная языковая строка
+ * @param mixed $a - скаляр, объект или массив со значениями подстановки
+ * @return string отформатированная строка
+ */
+function dof_parse_langstring($str, $a = null)
+{
+    if ($a === null || $a === '') {
+        return $str;
+    }
+
+    if (is_scalar($a)) {
+        return str_replace(array('{$a}', '$a'), (string)$a, $str);
+    }
+
+    if (is_object($a) || is_array($a)) {
+        return preg_replace_callback(
+            '/\{\$a(?:->|\[\'?|["\']?)([\w]+)(?:\'?\]|["\']?)?\}|\$a->([\w]+)|\$a\[\'?([\w]+)\'?\]|\{\$a\}|\$a/',
+            function ($matches) use ($a) {
+                $key = !empty($matches[1]) ? $matches[1] : (!empty($matches[2]) ? $matches[2] : (!empty($matches[3]) ? $matches[3] : null));
+                if ($key !== null) {
+                    if (is_object($a) && isset($a->$key)) {
+                        return (string)$a->$key;
+                    }
+                    if (is_array($a) && isset($a[$key])) {
+                        return (string)$a[$key];
+                    }
+                    if (is_object($a) && method_exists($a, $key)) {
+                        return (string)$a->$key();
+                    }
+                    return '';
+                }
+                if (is_scalar($a)) {
+                    return (string)$a;
+                }
+                return $matches[0];
+            },
+            $str
+        );
+    }
+
+    return $str;
+}
+
 /** Возвращает строку перевода из файла локализации
  * @param string $langfilepath - путь к файлу локализации
  * @param string $identifier - идентификатор строки, которая хранит перевод 
@@ -43,18 +87,20 @@ function dof_checkcode($str)
  */
 function dof_get_langstring($langfilepath, $identifier, $a=null)
 {
-    $resultstring = '';
     if ($a)
     {
-        $a = clean_getstring_data($a);
+        if (function_exists('clean_getstring_data'))
+        {
+            $a = clean_getstring_data($a);
+        }
     }					
     if (file_exists($langfilepath))
     {
-        if ($result = get_string_from_file($identifier, $langfilepath, "\$resultstring"))
+        $string = array();
+        include($langfilepath);
+        if (isset($string[$identifier]))
         {
-
-            eval($result);
-            return $resultstring;
+            return dof_parse_langstring($string[$identifier], $a);
         }
     }
     return '[['.$identifier.']]';
