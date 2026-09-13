@@ -610,10 +610,14 @@ class dof_storage_departments extends dof_storage implements dof_storage_config_
 
                 } else
                 {// структуированный массив';
-                    // TODO на этот массви нет проверки прав. сделать в будущем    
-                    // есть право - добавляем в список 
-                    $data->departments = $this->departments_list_subordinated($data->id, null, null, $select, $space, $code, $accesscheck);
-                    $departs[$data->id] = $data;
+                    if ( !$accesscheck OR
+                            $this->dof->is_access('manage') OR
+                            in_array('view/mydep', $right[$data->id]) OR
+                            in_array('view', $right[$data->id]) )
+                    {// есть право - добавляем в список
+                        $data->departments = $this->departments_list_subordinated($data->id, null, null, $select, $space, $code, $accesscheck);
+                        $departs[$data->id] = $data;
+                    }
                 }
             }
             // вывод нуля - для отображения блока слева подразделений
