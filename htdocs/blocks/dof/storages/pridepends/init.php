@@ -436,10 +436,11 @@ class dof_storage_pridepends extends dof_storage
             $this->dof->print_error('not_found_pits','',$id,$this->type(),$this->code());
         }
         
+        $listdepstrs_flip = array_flip($listdepstrs);
         foreach($listdiscs as $key=>$d)
         {
             // удалить зависимости
-            if ( in_array($d->id, $listdepstrs) )
+            if ( isset($listdepstrs_flip[$d->id]) )
             {
                 unset($listdiscs[$key]);
                 continue;
