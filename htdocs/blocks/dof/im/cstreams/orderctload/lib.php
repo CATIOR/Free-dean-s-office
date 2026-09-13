@@ -1111,7 +1111,6 @@ final class dof_im_cstreams_orders_table
         $actions = '';
         if ( ! empty($order->signdate) )
         {// подписан - смотреть и исполнить
-            // TODO сделать ссылку для подписан
             $actions .= '
             <a href="'.$this->dof->url_im('cstreams','/orderctload/view.php?id='.$order->id,$this->addvars)
             .'" title="'. $this->dof->get_string('order_see','cstreams')
@@ -1125,8 +1124,10 @@ final class dof_im_cstreams_orders_table
             }
         }else
         {// не подписан - удалить, продолжить работу, подписать
-            // TODO сделать ссылку для готово
             $actions .= '
+            <a href="'.$this->dof->url_im('cstreams', '/orderctload/sign_execute.php?id='.$order->id,$this->addvars)
+            .'" title="'. $this->dof->get_string('order_writeready','cstreams')
+            .'"> <img src="'.$this->dof->url_im('cstreams', '/icons/write.png').'">  </a>
             <a href="'.$this->dof->url_im('cstreams', '/orderctload/delete.php?id='.$order->id,$this->addvars)
             .'" title="'. $this->dof->get_string('order_delete','cstreams')
             .'"> <img src="'.$this->dof->url_im('cstreams', '/icons/delete.png').'" > </a>';
