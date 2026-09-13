@@ -79,7 +79,6 @@ final class dof_im_learningorders_orders_table
         $actions = "";
         if ( ! empty($order->signdate) )
         {// подписан - смотреть и исполнить
-            // TODO сделать ссылку для подписан
             $actions .= '
             <a href="'.$this->dof->url_im('learningorders','/ordertransfer/formationorder.php?id='.$order->id,$this->addvars)
             .'" title="'. $this->dof->get_string('order_see','learningorders')
@@ -131,7 +130,9 @@ final class dof_im_learningorders_orders_table
         $signdate = $this->dof->get_string('not_defined', 'learningorders');
         if ( $order->signdate )
         {// дата подписания известна
-            $signdate = dof_userdate($order->signdate, '%d/%m/%Y');    
+            $signdate = '<a href="'.$this->dof->url_im('learningorders','/ordertransfer/formationorder.php?id='.$order->id,$this->addvars)
+                .'" title="'. $this->dof->get_string('order_see','learningorders')
+                .'">'.dof_userdate($order->signdate, '%d/%m/%Y').'</a>';
         }
         $exdate = $this->dof->get_string('not_defined', 'learningorders');
         if ( $order->exdate )
